@@ -1,66 +1,38 @@
 import fs from 'fs';
 import path from 'path';
-import { createHash } from 'crypto';
 import matter from 'gray-matter';
 
-const WORKSPACE = path.resolve('../../../');
-const GITOPS_DOCS = path.join(WORKSPACE, 'synapse-gitops/docs/runbooks');
-const SHARED_DOCS = path.join(WORKSPACE, 'synapse-shared/docs');
+// site/scripts 기준 → ../../content
+const CONTENT_DIR = path.resolve('../../content');
 const OUTPUT_DIR = path.resolve('../assets/docs');
 
-const CATEGORY_MAP = [
-  { pattern: /^gitops\/docs\/runbooks/, category: 'infra' },
-  { pattern: /^shared\/docs\/guides/, category: 'guides' },
-  { pattern: /^shared\/docs\/project-management/, category: 'management' },
-  { pattern: /^shared\/docs\/(prd|superpowers)/, category: 'prd' },
-  { pattern: /^shared\/docs\/rules/, category: 'rules' },
-  { pattern: /^shared\/docs\/fix-requests/, category: 'fix-requests' },
-];
+const CATEGORIES = ['overview', 'flow', 'practice'];
 
 const TAG_KEYWORDS = [
   'kafka', 'argocd', 'terraform', 'eks', 'rds', 'msk', 'redis', 'opensearch',
   'docker', 'helm', 'staging', 'dev', 'prod', 'security', 'tls', 'acl',
   'flyway', 'gradle', 'ci', 'cd', 'deploy', 'rollback', 'e2e', 'avro', 'schema',
+  'jwt', 'rls', 'msa', 'rag', 'srs', 'pgvector', 'flutter', 'gateway',
 ];
 
 const STOP_PARTICLES = ['은', '는', '이', '가', '을', '를', '의', '에', '로', '와', '과', '도', '만', '까지'];
 
-const CACHE_FILE = path.resolve('.summary-cache.json');
-
 function collectMarkdownFiles() {
   const files = [];
-
-  if (fs.existsSync(GITOPS_DOCS)) {
-    for (const f of fs.readdirSync(GITOPS_DOCS)) {
+  for (const cat of CATEGORIES) {
+    const dir = path.join(CONTENT_DIR, cat);
+    if (!fs.existsSync(dir)) continue;
+    for (const f of fs.readdirSync(dir).sort()) {
       if (f.endsWith('.md')) {
-        files.push({ absPath: path.join(GITOPS_DOCS, f), relKey: `gitops/docs/runbooks/${f}` });
+        files.push({ absPath: path.join(dir, f), category: cat });
       }
     }
   }
-
-  function walk(dir, relBase) {
-    if (!fs.existsSync(dir)) return;
-    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-      const full = path.join(dir, entry.name);
-      const rel = `${relBase}/${entry.name}`;
-      if (entry.isDirectory()) walk(full, rel);
-      else if (entry.name.endsWith('.md')) files.push({ absPath: full, relKey: rel });
-    }
-  }
-  walk(SHARED_DOCS, 'shared/docs');
-
   return files;
 }
 
-function categorize(relKey) {
-  for (const { pattern, category } of CATEGORY_MAP) {
-    if (pattern.test(relKey)) return category;
-  }
-  return 'etc';
-}
-
-function slugify(relKey) {
-  return path.basename(relKey, '.md')
+function slugify(absPath) {
+  return path.basename(absPath, '.md')
     .toLowerCase()
     .replace(/[^a-z0-9가-힣_-]/g, '-')
     .replace(/-+/g, '-')
@@ -107,53 +79,6 @@ function getLastModified(absPath) {
   } catch { return null; }
 }
 
-function hashContent(text) {
-  return createHash('md5').update(text).digest('hex');
-}
-
-function loadCache() {
-  try { return JSON.parse(fs.readFileSync(CACHE_FILE, 'utf-8')); }
-  catch { return {}; }
-}
-
-function saveCache(cache) {
-  fs.writeFileSync(CACHE_FILE, JSON.stringify(cache, null, 2));
-}
-
-async function generateSummary(body, title) {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey || process.env.NO_AI === '1') return '';
-
-  const prompt = `다음 기술 문서를 2~3줄로 요약해줘. 핵심 목적, 대상, 결과물을 포함해.\n\n제목: ${title}\n\n${body.slice(0, 4000)}`;
-
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 200,
-        messages: [{ role: 'user', content: prompt }],
-      }),
-    });
-
-    if (!res.ok) {
-      console.warn(`  AI summary failed for "${title}": ${res.status}`);
-      return '';
-    }
-
-    const data = await res.json();
-    return data.content?.[0]?.text || '';
-  } catch (e) {
-    console.warn(`  AI summary error for "${title}": ${e.message}`);
-    return '';
-  }
-}
-
 function buildSearchIndex(docs) {
   const index = {};
   for (const doc of docs) {
@@ -174,7 +99,6 @@ function buildSearchIndex(docs) {
         }
       }
       if (token.length < 3 || token.length > 30) continue;
-      // skip pure numbers and common noise
       if (/^\d+$/.test(token)) continue;
       if (!index[token]) index[token] = [];
       if (!index[token].find(e => e.s === doc.slug)) {
@@ -197,38 +121,24 @@ async function main() {
   const files = collectMarkdownFiles();
   console.log(`Found ${files.length} markdown files`);
 
-  // Create output dirs
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-  for (const cat of ['infra', 'guides', 'management', 'prd', 'rules', 'fix-requests', 'etc']) {
+  for (const cat of CATEGORIES) {
     fs.mkdirSync(path.join(OUTPUT_DIR, cat), { recursive: true });
   }
 
-  const cache = loadCache();
   const indexEntries = [];
   const allDocs = [];
-  let summaryCount = 0;
 
-  for (const { absPath, relKey } of files) {
+  for (const { absPath, category } of files) {
     const raw = fs.readFileSync(absPath, 'utf-8');
     const { data: frontmatter, content: body } = matter(raw);
 
-    const slug = slugify(relKey);
-    const category = categorize(relKey);
+    const slug = slugify(absPath);
     const title = frontmatter.title
       || body.split('\n').find(l => l.startsWith('# '))?.replace(/^#\s+/, '')
       || slug;
-    const source = relKey.startsWith('gitops') ? 'synapse-gitops' : 'synapse-shared';
-
-    // AI summary with cache
-    const contentHash = hashContent(body);
-    let summary = '';
-    if (cache[slug] && cache[slug].hash === contentHash) {
-      summary = cache[slug].summary;
-    } else {
-      summary = await generateSummary(body, title);
-      if (summary) summaryCount++;
-      cache[slug] = { hash: contentHash, summary };
-    }
+    const source = 'synapse-onboarding';
+    const summary = '';
 
     const doc = {
       slug,
@@ -262,8 +172,6 @@ async function main() {
     });
   }
 
-  saveCache(cache);
-
   // Write index
   fs.writeFileSync(path.join(OUTPUT_DIR, 'index.json'), JSON.stringify(indexEntries, null, 2));
 
@@ -274,7 +182,6 @@ async function main() {
 
   const sizeKB = (Buffer.byteLength(searchJson) / 1024).toFixed(1);
   console.log(`Built ${indexEntries.length} docs, search index ${sizeKB}KB`);
-  if (summaryCount > 0) console.log(`Generated ${summaryCount} new AI summaries`);
 }
 
 main().catch(console.error);
