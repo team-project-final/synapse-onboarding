@@ -6,7 +6,7 @@ import matter from 'gray-matter';
 const CONTENT_DIR = path.resolve('../../content');
 const OUTPUT_DIR = path.resolve('../assets/docs');
 
-const CATEGORIES = ['overview', 'flow', 'practice'];
+const CATEGORIES = ['overview', 'flow', 'services', 'practice'];
 
 const TAG_KEYWORDS = [
   'kafka', 'argocd', 'terraform', 'eks', 'rds', 'msk', 'redis', 'opensearch',
