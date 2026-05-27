@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:synapse_onboarding/widgets/code_block.dart';
 import 'package:synapse_onboarding/widgets/mermaid_view.dart';
 
 class MarkdownViewer extends StatelessWidget {
   final String data;
 
-  const MarkdownViewer({super.key, required this.data});
+  /// Invoked when an in-body markdown link is tapped. Defaults to opening the
+  /// href in an external browser tab. Injectable so widget tests can assert
+  /// the href without hitting the url_launcher platform channel.
+  final void Function(String href)? onLinkTap;
+
+  const MarkdownViewer({super.key, required this.data, this.onLinkTap});
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +43,20 @@ class MarkdownViewer extends StatelessWidget {
         tableHead: const TextStyle(fontWeight: FontWeight.bold),
         tableCellsPadding: const EdgeInsets.all(8),
       ),
+      onTapLink: (text, href, title) {
+        if (href == null || href.isEmpty) return;
+        (onLinkTap ?? _launchExternal)(href);
+      },
       builders: {
         'code': _CodeBlockBuilder(),
       },
     );
+  }
+
+  static Future<void> _launchExternal(String href) async {
+    final uri = Uri.tryParse(href);
+    if (uri == null) return;
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 }
 
