@@ -1,5 +1,5 @@
-name: synapse_runbooks
-description: Synapse GitOps Runbook Viewer
+name: synapse_onboarding
+description: Synapse 신입 온보딩 포털
 publish_to: 'none'
 version: 1.0.0
 
@@ -22,12 +22,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/runbooks/
     - assets/docs/
-    - assets/docs/infra/
-    - assets/docs/guides/
-    - assets/docs/management/
-    - assets/docs/prd/
-    - assets/docs/rules/
-    - assets/docs/fix-requests/
-    - assets/docs/etc/
+    - assets/docs/overview/
+    - assets/docs/flow/
+    - assets/docs/practice/

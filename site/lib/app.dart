@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:synapse_runbooks/pages/home_page.dart';
-import 'package:synapse_runbooks/pages/runbook_page.dart';
-import 'package:synapse_runbooks/pages/onboarding_page.dart';
-import 'package:synapse_runbooks/pages/doc_page.dart';
-import 'package:synapse_runbooks/pages/search_page.dart';
-import 'package:synapse_runbooks/pages/dashboard_page.dart';
-import 'package:synapse_runbooks/widgets/sidebar.dart';
+import 'package:synapse_onboarding/pages/home_page.dart';
+import 'package:synapse_onboarding/pages/runbook_page.dart';
+import 'package:synapse_onboarding/pages/onboarding_page.dart';
+import 'package:synapse_onboarding/pages/doc_page.dart';
+import 'package:synapse_onboarding/pages/search_page.dart';
+import 'package:synapse_onboarding/pages/dashboard_page.dart';
+import 'package:synapse_onboarding/widgets/sidebar.dart';
 
 final _router = GoRouter(
   routes: [

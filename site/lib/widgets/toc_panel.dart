@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:synapse_runbooks/models/doc.dart';
+import 'package:synapse_onboarding/models/doc.dart';
 
 class TocPanel extends StatelessWidget {
   final List<TocEntry> toc;

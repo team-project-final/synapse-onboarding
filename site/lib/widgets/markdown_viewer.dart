@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:synapse_runbooks/widgets/code_block.dart';
+import 'package:synapse_onboarding/widgets/code_block.dart';
 
 class MarkdownViewer extends StatelessWidget {
   final String data;

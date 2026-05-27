@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:synapse_runbooks/models/doc.dart';
-import 'package:synapse_runbooks/models/search_index.dart';
-import 'package:synapse_runbooks/widgets/search_bar_widget.dart';
-import 'package:synapse_runbooks/widgets/tag_chip.dart';
+import 'package:synapse_onboarding/models/doc.dart';
+import 'package:synapse_onboarding/models/search_index.dart';
+import 'package:synapse_onboarding/widgets/search_bar_widget.dart';
+import 'package:synapse_onboarding/widgets/tag_chip.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});

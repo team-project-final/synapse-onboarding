@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:synapse_runbooks/models/doc.dart';
-import 'package:synapse_runbooks/widgets/progress_bar.dart';
+import 'package:synapse_onboarding/models/doc.dart';
+import 'package:synapse_onboarding/widgets/progress_bar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

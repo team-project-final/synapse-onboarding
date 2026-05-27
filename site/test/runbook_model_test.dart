@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:synapse_runbooks/models/runbook.dart';
+import 'package:synapse_onboarding/models/runbook.dart';
 
 void main() {
   group('Runbook model', () {

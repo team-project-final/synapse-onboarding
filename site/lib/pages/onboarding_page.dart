@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:synapse_runbooks/models/runbook.dart';
+import 'package:synapse_onboarding/models/runbook.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});

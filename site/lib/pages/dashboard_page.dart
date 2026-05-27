@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:synapse_runbooks/models/doc.dart';
-import 'package:synapse_runbooks/widgets/progress_bar.dart';
+import 'package:synapse_onboarding/models/doc.dart';
+import 'package:synapse_onboarding/widgets/progress_bar.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});

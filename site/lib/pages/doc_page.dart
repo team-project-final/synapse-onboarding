@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:synapse_runbooks/models/doc.dart';
-import 'package:synapse_runbooks/widgets/markdown_viewer.dart';
-import 'package:synapse_runbooks/widgets/summary_card.dart';
-import 'package:synapse_runbooks/widgets/toc_panel.dart';
-import 'package:synapse_runbooks/widgets/tag_chip.dart';
-import 'package:synapse_runbooks/widgets/progress_bar.dart';
+import 'package:synapse_onboarding/models/doc.dart';
+import 'package:synapse_onboarding/widgets/markdown_viewer.dart';
+import 'package:synapse_onboarding/widgets/summary_card.dart';
+import 'package:synapse_onboarding/widgets/toc_panel.dart';
+import 'package:synapse_onboarding/widgets/tag_chip.dart';
+import 'package:synapse_onboarding/widgets/progress_bar.dart';
 
 class DocPage extends StatefulWidget {
   final String category;
