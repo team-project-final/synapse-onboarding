@@ -27,4 +27,5 @@ flutter:
     - assets/docs/overview/
     - assets/docs/flow/
     - assets/docs/services/
+    - assets/docs/code/
     - assets/docs/practice/

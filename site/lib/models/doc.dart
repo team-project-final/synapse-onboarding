@@ -2,6 +2,7 @@ enum DocCategory {
   overview,
   flow,
   services,
+  code,
   practice;
 
   static DocCategory fromString(String value) {
@@ -12,6 +13,8 @@ enum DocCategory {
         return DocCategory.flow;
       case 'services':
         return DocCategory.services;
+      case 'code':
+        return DocCategory.code;
       case 'practice':
         return DocCategory.practice;
       default:
@@ -29,6 +32,8 @@ enum DocCategory {
         return '흐름';
       case DocCategory.services:
         return '서비스 상세';
+      case DocCategory.code:
+        return '샘플 코드';
       case DocCategory.practice:
         return '실전';
     }
@@ -42,6 +47,8 @@ enum DocCategory {
         return '\u{1F500}'; // 🔀
       case DocCategory.services:
         return '\u{2699}\u{FE0F}'; // ⚙️
+      case DocCategory.code:
+        return '\u{1F9EA}'; // 🧪
       case DocCategory.practice:
         return '\u{1F680}'; // 🚀
     }
