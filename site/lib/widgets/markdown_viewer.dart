@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:synapse_onboarding/widgets/code_block.dart';
+import 'package:synapse_onboarding/widgets/mermaid_view.dart';
 
 class MarkdownViewer extends StatelessWidget {
   final String data;
@@ -49,6 +50,10 @@ class _CodeBlockBuilder extends MarkdownElementBuilder {
     if (element.textContent.isEmpty) return null;
 
     final language = element.attributes['class']?.replaceFirst('language-', '');
+
+    if (language == 'mermaid') {
+      return MermaidView(code: element.textContent.trimRight());
+    }
 
     if (element.textContent.contains('\n') || language != null) {
       return CodeBlockWidget(
