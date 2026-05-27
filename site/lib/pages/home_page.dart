@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:synapse_onboarding/models/doc.dart';
-import 'package:synapse_onboarding/widgets/progress_bar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -43,8 +42,6 @@ class _HomePageState extends State<HomePage> {
           (categoryCounts[d.category] ?? 0) + 1;
     }
 
-    final withProgress =
-        _docs.where((d) => d.metadata.completionRate != null).toList();
     final recent = List<DocIndex>.from(_docs)
       ..sort((a, b) => (b.metadata.lastUpdated ?? '')
           .compareTo(a.metadata.lastUpdated ?? ''));
@@ -54,47 +51,17 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Synapse Docs',
+          Text('Synapse 신입 온보딩',
               style: Theme.of(context).textTheme.headlineLarge),
           const SizedBox(height: 8),
           Text(
-            '인프라 구축부터 운영까지, 프로젝트 전체 문서를 한 곳에서',
+            'MSA를 처음 접하는 신입을 위한 — 시스템 전체 흐름과 기능 한눈에 보기',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color:
                       Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
           ),
           const SizedBox(height: 24),
-          if (withProgress.isNotEmpty) ...[
-            Card(
-              color: const Color(0xFFF5F5F4),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('프로젝트 현황',
-                        style:
-                            Theme.of(context).textTheme.titleMedium),
-                    const SizedBox(height: 12),
-                    for (final doc in withProgress.take(5))
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: ProgressBar(
-                            percentage: doc.metadata.completionRate!,
-                            label: doc.title),
-                      ),
-                    if (withProgress.length > 5)
-                      TextButton(
-                        onPressed: () => context.go('/dashboard'),
-                        child: const Text('전체 보기'),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-          ],
           Text('카테고리',
               style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 12),

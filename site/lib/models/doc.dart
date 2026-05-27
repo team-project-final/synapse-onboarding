@@ -1,70 +1,42 @@
 enum DocCategory {
-  infra,
-  guides,
-  management,
-  prd,
-  rules,
-  fixRequests;
+  overview,
+  flow,
+  practice;
 
   static DocCategory fromString(String value) {
     switch (value) {
-      case 'infra':
-        return DocCategory.infra;
-      case 'guides':
-        return DocCategory.guides;
-      case 'management':
-        return DocCategory.management;
-      case 'prd':
-        return DocCategory.prd;
-      case 'rules':
-        return DocCategory.rules;
-      case 'fix-requests':
-        return DocCategory.fixRequests;
+      case 'overview':
+        return DocCategory.overview;
+      case 'flow':
+        return DocCategory.flow;
+      case 'practice':
+        return DocCategory.practice;
       default:
-        return DocCategory.infra;
+        return DocCategory.overview;
     }
   }
 
-  String get id {
-    switch (this) {
-      case DocCategory.fixRequests:
-        return 'fix-requests';
-      default:
-        return name;
-    }
-  }
+  String get id => name;
 
   String get displayName {
     switch (this) {
-      case DocCategory.infra:
-        return '인프라';
-      case DocCategory.guides:
-        return '가이드';
-      case DocCategory.management:
-        return '프로젝트 관리';
-      case DocCategory.prd:
-        return 'PRD/설계';
-      case DocCategory.rules:
-        return '규칙';
-      case DocCategory.fixRequests:
-        return '수정 요청';
+      case DocCategory.overview:
+        return '개요';
+      case DocCategory.flow:
+        return '흐름';
+      case DocCategory.practice:
+        return '실전';
     }
   }
 
   String get icon {
     switch (this) {
-      case DocCategory.infra:
-        return '\u{1F3D7}';
-      case DocCategory.guides:
-        return '\u{1F4CB}';
-      case DocCategory.management:
-        return '\u{1F4CA}';
-      case DocCategory.prd:
-        return '\u{1F4DD}';
-      case DocCategory.rules:
-        return '\u{1F4CF}';
-      case DocCategory.fixRequests:
-        return '\u{1F527}';
+      case DocCategory.overview:
+        return '\u{1F4D6}'; // 📖
+      case DocCategory.flow:
+        return '\u{1F500}'; // 🔀
+      case DocCategory.practice:
+        return '\u{1F680}'; // 🚀
     }
   }
 }
