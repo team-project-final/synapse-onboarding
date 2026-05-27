@@ -1,0 +1,9 @@
+site/build/
+site/.dart_tool/
+site/.flutter-plugins-dependencies
+site/scripts/node_modules/
+site/scripts/.summary-cache.json
+site/assets/docs/
+**/*.iml
+.idea/
+.DS_Store
