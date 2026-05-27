@@ -1,24 +1,12 @@
-# Synapse Docs Portal
+# site — Flutter Web 앱
 
-synapse-gitops 문서(runbook / handoff / 개발 가이드)를 검색·브라우즈하는 Flutter Web 포털.
+Synapse 신입 온보딩 포털의 Flutter Web 앱입니다. 빌드·실행·배포 방법은 레포 루트의 [README.md](../README.md)를 참고하세요.
 
 ## 구조
 
-- `lib/pages/` — home / search / dashboard / doc / runbook / onboarding
-- `lib/widgets/` — 공통 위젯 (markdown viewer, sidebar, progress bar 등)
-- `scripts/build_docs.mjs` — Markdown → JSON + 검색 인덱스 + AI 요약 빌드 (Node)
+- `lib/pages/` — home · doc · search
+- `lib/widgets/` — markdown viewer · sidebar · TOC · mermaid view 등
+- `lib/models/` — doc · search index 모델
+- `scripts/build_docs.mjs` — `../content/` 마크다운 → `assets/docs/*.json` 빌드 (Node)
 
-## 로컬 실행
-
-```bash
-# 1) 문서 JSON 생성 (synapse-gitops + synapse-shared 문서 수집)
-cd scripts && npm ci && node build_docs.mjs
-
-# 2) 포털 실행
-cd .. && flutter pub get && flutter run -d chrome
-```
-
-## 배포
-
-main 푸시 시 `.github/workflows/deploy-pages.yml`이 문서 JSON을 빌드하고
-Flutter Web을 GitHub Pages로 자동 배포한다.
+콘텐츠는 이 앱이 아니라 레포 루트의 `content/`에 있습니다.
